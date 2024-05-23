@@ -5,18 +5,31 @@ namespace  Edu\IU\RSB\StructuredDataNodes;
 
 class GroupNode extends BaseNode{
 
-    public function __construct(string $identifier, array $nodeArray)
+    public function __construct(string $identifier, BaseNode $node = null)
     {
-
-        if(!key_exists('structuredDataNode', $nodeArray)){
-            throw new \RuntimeException('2nd parameter\'s $nodeArray["structuredDataNodes"] should contain key named "structuredDataNode"');
-        }
-
-        if(!is_array($nodeArray['structuredDataNode'])){
-            throw new \RuntimeException('in 2nd parameter, the value of "structuredDataNode" should be array');
-        }
         parent::__construct('group', $identifier);
+        $this->nodeArray['structuredDataNodes'] = ['structuredDataNode' => null];
+        if(!is_null($node)){
+            $this->addChild($node);
+        }
 
-        $this->nodeArray['structuredDataNodes'] = $nodeArray;
+    }
+
+    public function addChild(BaseNode $node):void
+    {
+        // empty
+        if (is_null($this->nodeArray['structuredDataNodes']['structuredDataNode'])){
+            $this->nodeArray['structuredDataNodes']['structuredDataNode'] = $node->getNodeArray();
+            // only 1
+        }elseif(!array_is_list($this->nodeArray['structuredDataNodes']['structuredDataNode'])){
+            $theOneChildNode = $this->nodeArray['structuredDataNodes']['structuredDataNode'];
+            $this->nodeArray['structuredDataNodes']['structuredDataNode'] = [];
+            $this->nodeArray['structuredDataNodes']['structuredDataNode'][] = $theOneChildNode;
+            $this->nodeArray['structuredDataNodes']['structuredDataNode'][] = $node->getNodeArray();
+            // multiple
+        }else{
+            $this->nodeArray['structuredDataNodes']['structuredDataNode'][] = $node->getNodeArray();
+        }
+
     }
 }

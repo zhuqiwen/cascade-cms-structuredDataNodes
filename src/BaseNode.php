@@ -25,4 +25,9 @@ class BaseNode{
         $this->nodeArray['type'] = $type;
         $this->nodeArray['identifier'] = $identifier;
     }
+
+    public function getNodeArray():array
+    {
+        return $this->nodeArray;
+    }
 }
