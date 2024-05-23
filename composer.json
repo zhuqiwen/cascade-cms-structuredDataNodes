@@ -1,0 +1,17 @@
+{
+  "name": "iu-rsb/structured-data-nodes",
+  "description": "A lib helps build structured data nodes for WCMS",
+  "license": "GPL-3.0-only",
+  "authors": [
+    {
+      "name": "Qiwen Zhu",
+      "email": "qiwzhu@iu.edu"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Edu\\IU\\RSB\\StructuredDataNodes\\": "src"
+    }
+  }
+}
