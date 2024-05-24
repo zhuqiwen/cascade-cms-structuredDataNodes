@@ -7,11 +7,8 @@ class BlockNode extends AssetNode {
     public function __construct(string $identifier, string $blockId, string $blockPath)
     {
 
-        parent::__construct($identifier);
-
-        $this->nodeArray['blockId'] = $blockId;
-        $this->nodeArray['blockPath'] = $blockPath;
-        $this->nodeArray['assetType'] = 'block';
-
+        parent::__construct($identifier, 'block');
+        $this->blockId = $blockId;
+        $this->blockPath = $blockPath;
     }
 }

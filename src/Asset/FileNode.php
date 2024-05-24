@@ -6,10 +6,8 @@ class FileNode extends AssetNode {
 
     public function __construct(string $identifier, string $assetId, string $assetPath)
     {
-        parent::__construct($identifier);
-
-        $this->nodeArray['fileId'] = $assetId;
-        $this->nodeArray['filePath'] = $assetPath;
-        $this->nodeArray['assetType'] = 'file';
+        parent::__construct($identifier, 'file');
+        $this->fileId = $assetId;
+        $this->filePath = $assetPath;
     }
 }

@@ -13,8 +13,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
             throw new \RuntimeException('$text should be in the format of mm-dd-yyyy');
         }
 
-        parent::__construct($identifier);
-        $this->nodeArray['text'] = $text;
+        parent::__construct($identifier, $text);
     }
 
      public function isCalendarString(string $text): bool

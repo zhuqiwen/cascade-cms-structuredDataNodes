@@ -7,8 +7,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
     public function __construct(string $identifier, array $options)
     {
-        parent::__construct($identifier);
         $text = implode('::CONTENT-XML-SELECTOR::', $options);
-        $this->nodeArray['text'] = $text;
+        parent::__construct($identifier, $text);
     }
 }

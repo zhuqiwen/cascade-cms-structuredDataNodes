@@ -6,8 +6,9 @@ use Edu\IU\RSB\StructuredDataNodes\BaseNode;
 abstract class TextNode extends BaseNode{
 
 
-    public function __construct(string $identifier)
+    public function __construct(string $identifier, string $text)
     {
         parent::__construct('text', $identifier);
+        $this->text = $text;
     }
 }

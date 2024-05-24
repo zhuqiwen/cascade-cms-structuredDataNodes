@@ -7,9 +7,9 @@ class SymlinkNode extends AssetNode {
     public function __construct(string $identifier, string $assetId, string $assetPath)
     {
 
-        parent::__construct($identifier);
+        parent::__construct($identifier, 'symlink');
 
-        $this->nodeArray['symlinkId'] = $assetId;
-        $this->nodeArray['symlinkPath'] = $assetPath;
-        $this->nodeArray['assetType'] = 'symlink';
-    }}
+        $this->symlinkId = $assetId;
+        $this->symlinkPath = $assetPath;
+    }
+}

@@ -13,8 +13,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
             throw new \RuntimeException('$text must be an eligible epoch string consisting of 13 numeric characters');
         }
 
-        parent::__construct($identifier);
-        $this->nodeArray['text'] = $text;
+        parent::__construct($identifier, $text);
     }
 
      public function isEpochFormat(string $text): bool

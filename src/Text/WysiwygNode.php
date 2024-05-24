@@ -8,12 +8,10 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
     public function __construct(string $identifier, string $text)
     {
         $text = trim($text);
-        //TODO: check if tag is properly closed
         if (!$this->areAllTagsClosed($text)){
             throw new \RuntimeException('open tags and close tags in $text do not match');
         }
-        parent::__construct($identifier);
-        $this->nodeArray['text'] = $text;
+        parent::__construct($identifier, $text);
     }
 
      public function areAllTagsClosed(string $text):bool

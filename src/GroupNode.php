@@ -8,7 +8,7 @@ class GroupNode extends BaseNode{
     public function __construct(string $identifier, BaseNode $node = null)
     {
         parent::__construct('group', $identifier);
-        $this->nodeArray['structuredDataNodes'] = ['structuredDataNode' => null];
+        $this->setValue('structuredDataNodes', ['structuredDataNode' => null]) ;
         if(!is_null($node)){
             $this->addChild($node);
         }
@@ -18,17 +18,24 @@ class GroupNode extends BaseNode{
     public function addChild(BaseNode $node):void
     {
         // empty
-        if (is_null($this->nodeArray['structuredDataNodes']['structuredDataNode'])){
-            $this->nodeArray['structuredDataNodes']['structuredDataNode'] = $node->getNodeArray();
+        $thisNodeArray = $this->getNodeArray();
+        if (is_null($thisNodeArray['structuredDataNodes']['structuredDataNode'])){
+            $this->setValue('structuredDataNodes', ['structuredDataNode' => $node->getNodeArray()]);
             // only 1
-        }elseif(!array_is_list($this->nodeArray['structuredDataNodes']['structuredDataNode'])){
-            $theOneChildNode = $this->nodeArray['structuredDataNodes']['structuredDataNode'];
-            $this->nodeArray['structuredDataNodes']['structuredDataNode'] = [];
-            $this->nodeArray['structuredDataNodes']['structuredDataNode'][] = $theOneChildNode;
-            $this->nodeArray['structuredDataNodes']['structuredDataNode'][] = $node->getNodeArray();
+        }elseif(!array_is_list($thisNodeArray['structuredDataNodes']['structuredDataNode'])){
+            $theOneChildNode = $thisNodeArray['structuredDataNodes']['structuredDataNode'];
+            $tmpArray = [
+                'structuredDataNode' => [
+                    $theOneChildNode,
+                    $node->getNodeArray()
+                ]
+            ];
+            $this->setValue('structuredDataNodes', $tmpArray);
             // multiple
         }else{
-            $this->nodeArray['structuredDataNodes']['structuredDataNode'][] = $node->getNodeArray();
+            $tmpArray = $thisNodeArray['structuredDataNodes'];
+            $tmpArray['structuredDataNode'][] = $node->getNodeArray();
+            $this->setValue('structuredDataNodes', $tmpArray);
         }
 
     }

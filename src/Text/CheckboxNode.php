@@ -8,7 +8,6 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
     public function __construct(string $identifier, array $options)
     {
         $text = implode('::CONTENT-XML-CHECKBOX::', $options);
-        parent::__construct($identifier);
-        $this->nodeArray['text'] = $text;
+        parent::__construct($identifier, $text);
     }
 }
