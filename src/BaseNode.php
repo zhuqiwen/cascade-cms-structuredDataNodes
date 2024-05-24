@@ -3,7 +3,10 @@
 namespace  Edu\IU\RSB\StructuredDataNodes;
 
 class BaseNode{
-
+    /**
+     * DO NOT add any public attributes
+     * since the following attributes are returned as the keys in the node's associative array
+     */
     public ?string $type = null;
     public ?string $identifier = null;
     public ?array $structuredDataNodes = null;
@@ -17,7 +20,17 @@ class BaseNode{
     public ?string $pagePath = null;
     public ?string $symlinkId = null;
     public ?string $symlinkPath = null;
-    public bool $recycled;
+    public bool $recycled = false;
+
+    /**
+     * If any extra attributes are needed, add only as private, protected, and/or static below here
+     */
+
+    /**
+     * END of non-public attributes
+     */
+
+
 
     public function __construct(string $type, string $identifier)
     {
@@ -27,13 +40,17 @@ class BaseNode{
 
     public function getNodeArray():array
     {
-        return get_object_vars($this);
+        // use first class callable to get only public attributes and their values as associative array
+        return get_object_vars(...)->__invoke($this);
     }
 
     public function setValue(string $key, string | bool | array $value):void
     {
         if ($key == 'type'){
             throw new \RuntimeException("$key cannot be modified");
+        }
+        if (!in_array($key, array_keys($this->getNodeArray()))){
+            throw new \RuntimeException("$key is not a valid attribute.");
         }
         $this->{$key} = $value;
     }
