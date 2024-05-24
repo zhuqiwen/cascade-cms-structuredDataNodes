@@ -38,12 +38,21 @@ class BaseNode{
         $this->identifier = $identifier;
     }
 
+    /**
+     * the returned array will be used to construct data for creating/updating pages and blocks in Cascade CMS
+     * @return array
+     */
     public function getNodeArray():array
     {
         // use first class callable to get only public attributes and their values as associative array
         return get_object_vars(...)->__invoke($this);
     }
 
+    /**
+     * @param string $key
+     * @param string|bool|array $value
+     * @return void
+     */
     public function setValue(string $key, string | bool | array $value):void
     {
         if ($key == 'type'){
