@@ -16,6 +16,16 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
         parent::__construct($identifier, $text);
     }
 
+     public function setValueText(string $val):void
+     {
+         $text = trim($val);
+
+         if(!$this->isEpochFormat($text)){
+             throw new \RuntimeException('$text must be an eligible epoch string consisting of 13 numeric characters');
+         }
+         $this->text = $text;
+     }
+
      public function isEpochFormat(string $text): bool
      {
          $pattern = '/^[0-9]{13}$/';

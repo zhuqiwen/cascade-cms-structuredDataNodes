@@ -11,4 +11,10 @@ abstract class TextNode extends BaseNode{
         parent::__construct('text', $identifier);
         $this->text = $text;
     }
+
+
+    public function setValueText(string $val):void
+    {
+        $this->text = $val;
+    }
 }

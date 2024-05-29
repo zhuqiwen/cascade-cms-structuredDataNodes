@@ -64,4 +64,15 @@ class BaseNode{
         $this->{$key} = $value;
     }
 
+    //TODO: add shortcut methods for setValue()
+    public function setValueIdentifier(string $val):void
+    {
+        $this->identifier = $val;
+    }
+
+    public function setValueRecycled(bool $val):void
+    {
+        $this->recycled = $val;
+    }
+
 }

@@ -37,6 +37,10 @@ class GroupNode extends BaseNode{
             $tmpArray['structuredDataNode'][] = $node->getNodeArray();
             $this->setValue('structuredDataNodes', $tmpArray);
         }
+    }
 
+    public function setValueStructuredDataNodes(BaseNode $node):void
+    {
+        $this->addChild($node);
     }
 }

@@ -14,6 +14,15 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
         parent::__construct($identifier, $text);
     }
 
+     public function setValueText(string $val):void
+     {
+         $text = trim($val);
+         if (!$this->areAllTagsClosed($text)){
+             throw new \RuntimeException('open tags and close tags in $text do not match');
+         }
+         $this->text = $text;
+    }
+
      public function areAllTagsClosed(string $text):bool
      {
          $openTagPattern = '#<([a-z]+)(?: .*)?(?<![/|/ ])>#iU';
