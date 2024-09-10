@@ -10,4 +10,14 @@ class PageNode extends AssetNode {
         $this->pageId = $assetId;
         $this->pagePath = $assetPath;
     }
+
+    public function setValuePagePath(string $pagePath):void
+    {
+        $this->pagePath = $pagePath;
+    }
+
+    public function setValueFileId(string $pageId):void
+    {
+        $this->pageId = $pageId;
+    }
 }

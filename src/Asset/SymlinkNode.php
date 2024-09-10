@@ -12,4 +12,14 @@ class SymlinkNode extends AssetNode {
         $this->symlinkId = $assetId;
         $this->symlinkPath = $assetPath;
     }
+
+    public function setValueSymlinkPath(string $symlinkPath):void
+    {
+        $this->symlinkPath = $symlinkPath;
+    }
+
+    public function setValueSymlinkId(string $symlinkId):void
+    {
+        $this->symlinkId = $symlinkId;
+    }
 }
