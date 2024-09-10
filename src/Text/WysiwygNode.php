@@ -5,7 +5,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
  class WysiwygNode extends TextNode {
 
 
-    public function __construct(string $identifier, string $text)
+    public function __construct(string $identifier, string $text = '')
     {
         $text = trim($text);
         if (!$this->areAllTagsClosed($text)){

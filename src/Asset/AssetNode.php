@@ -9,7 +9,12 @@ abstract class AssetNode extends BaseNode{
     public function __construct(string $identifier, string $assetType)
     {
         parent::__construct('asset', $identifier);
-        $this->assetType = $assetType;
+        $this->setValueAssetType($assetType);
 
+    }
+
+    public function setValueAssetType(string $assetType):void
+    {
+        $this->assetType = $assetType;
     }
 }
