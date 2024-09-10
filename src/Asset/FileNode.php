@@ -10,4 +10,14 @@ class FileNode extends AssetNode {
         $this->fileId = $assetId;
         $this->filePath = $assetPath;
     }
+
+    public function setValueFilePath(string $filePath):void
+    {
+        $this->filePath = $filePath;
+    }
+
+    public function setValueFileId(string $fileId):void
+    {
+        $this->fileId = $fileId;
+    }
 }
