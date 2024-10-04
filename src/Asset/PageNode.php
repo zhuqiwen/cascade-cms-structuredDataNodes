@@ -4,7 +4,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Asset;
 
 class PageNode extends AssetNode {
 
-    public function __construct(string $identifier, string $assetId = '', string $assetPath = '')
+    public function __construct(string $identifier, string | null $assetId = null, string | null $assetPath = null)
     {
         parent::__construct($identifier, 'page');
         $this->pageId = $assetId;

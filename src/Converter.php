@@ -16,7 +16,7 @@ use Edu\IU\RSB\StructuredDataNodes\Asset\SymlinkNode;
 class Converter{
 
 
-    function getAssetInfo(\stdClass $assetNode):array
+    public function getAssetInfo(\stdClass $assetNode):array
     {
         if (!is_null($assetNode->blockId) && !is_null($assetNode->blockPath)){
             $type = 'block';
@@ -35,15 +35,25 @@ class Converter{
             $assetId = $assetNode->symlinkId;
             $assetPath = $assetNode->symlinkPath;
         }else{
-            $type = '';
-            $assetId = '';
-            $assetPath = '';
+            $type = null;
+            $assetId = null;
+            $assetPath = null;
         }
 
         return compact('type', 'assetId', 'assetPath');
     }
 
-    function convert(\stdClass $node): BaseNode
+    public function convert(array $originalNodesArray): array
+    {
+        $result = [];
+        foreach ($originalNodesArray as $node){
+            $result[] = $this->convertNode($node);
+        }
+
+        return $result;
+    }
+
+    public function convertNode(\stdClass $node): BaseNode
     {
         return match ($node->type){
             'asset' => $this->processAssetNode($node),
@@ -70,8 +80,16 @@ class Converter{
     public function processGroupNode(\stdClass $groupNode): GroupNode
     {
         $dataNode = new GroupNode($groupNode->identifier);
-        foreach ($groupNode->structuredDataNodes->structuredDataNode as $childNode) {
-            $dataNode->addChild($this->convert($childNode));
+
+        $structuredDataNode = $groupNode->structuredDataNodes->structuredDataNode;
+        $structuredDataNodeArray = $structuredDataNode;
+        // in original structuredDataNode, if there is only one child, then it's a stdclass instead of array
+        if (!is_array($structuredDataNode)){
+            $structuredDataNodeArray = [$structuredDataNode];
+        }
+
+        foreach ($structuredDataNodeArray as $childNode) {
+            $dataNode->addChild($this->convertNode($childNode));
         }
 
         return $dataNode;
@@ -80,7 +98,6 @@ class Converter{
     public function processTextNode(\stdClass $textNode): BaseNode
     {
         $dataNode = new BaseNode('text', $textNode->identifier);
-//        $text = $textNode->text ?? '';
         $dataNode->setValue('text', $textNode->text);
 
         return $dataNode;

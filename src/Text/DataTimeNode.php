@@ -5,7 +5,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
  class DataTimeNode extends TextNode {
 
 
-    public function __construct(string $identifier, string $text = '')
+    public function __construct(string $identifier, string | null $text = null)
     {
         $text = trim($text);
 

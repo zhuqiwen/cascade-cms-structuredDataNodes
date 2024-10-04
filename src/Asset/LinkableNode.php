@@ -4,11 +4,11 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Asset;
 
 class LinkableNode extends AssetNode {
 
-    public function __construct(string $identifier, string $assetId = '', string $assetPath = '', string $whichType = '')
+    public function __construct(string $identifier, string | null $assetId = null, string | null $assetPath = null, string | null $whichType = null)
     {
         parent::__construct($identifier, 'page,file,symlink');
 
-        if (!empty(trim($whichType))){
+        if (!is_null($whichType) && !empty(trim($whichType))){
             $this->setValues($whichType, $assetId, $assetPath);
         }
 
