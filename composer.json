@@ -13,5 +13,9 @@
     "psr-4": {
       "Edu\\IU\\RSB\\StructuredDataNodes\\": "src"
     }
+  },
+  "require": {
+    "iu-vpcm-dc/wcms-webservice": "dev-main",
+    "iu-webtech/wcms-generic-tool": "dev-main"
   }
 }

@@ -53,7 +53,7 @@ class BaseNode{
      * @param string|bool|array $value
      * @return void
      */
-    public function setValue(string $key, string | bool | array $value):void
+    public function setValue(string $key, string | bool | array | null $value):void
     {
         if ($key == 'type'){
             throw new \RuntimeException("$key cannot be modified");
