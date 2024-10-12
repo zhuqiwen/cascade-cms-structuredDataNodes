@@ -102,19 +102,22 @@ class GroupNode extends BaseNode implements NodeInterface {
         $pathToNodeFromThisGroupNode = trim($pathToNodeFromThisGroupNode, DIRECTORY_SEPARATOR);
         //try textChildrenDict first
         if (array_key_exists($pathToNodeFromThisGroupNode, $this->textChildrenDict)){
-            return $this->textChildrenDict[$pathToNodeFromThisGroupNode];
+            return $this->textChildrenDict[$pathToNodeFromThisGroupNode][0];
             //then try assetChildrenDict
         }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->assetChildrenDict)){
-            return $this->assetChildrenDict[$pathToNodeFromThisGroupNode];
+            return $this->assetChildrenDict[$pathToNodeFromThisGroupNode][0];
         }else{ //if not found, then try going through child Group nodes
             $pathToUseInChildGroupNodes = $this->getPathToUseInChildGroupNode($pathToNodeFromThisGroupNode);
 
-            foreach ($this->groupChildrenDict as $childGroupNode){
-                $targetNode = $childGroupNode->getSingleChildNodeByPath($pathToUseInChildGroupNodes);
-                if (!is_null($targetNode)){
-                    // only find the first that matches
-                    return $targetNode;
+            foreach ($this->groupChildrenDict as $childGroupNodeArray){
+                foreach ($childGroupNodeArray as $childGroupNode){
+                    $targetNode = $childGroupNode->getSingleChildNodeByPath($pathToUseInChildGroupNodes);
+                    if (!is_null($targetNode)){
+                        // only find the first that matches
+                        return $targetNode;
+                    }
                 }
+
             }
         }
 
@@ -143,20 +146,32 @@ class GroupNode extends BaseNode implements NodeInterface {
     private function addToTextChildrenDict(NodeInterface $node):void
     {
         $path = $this->constructPath($node);
-        //node identifier is unique, so is $path
-        $this->textChildrenDict[$path] = $node;
+        //node identifier is not unique
+        if (array_key_exists($path, $this->textChildrenDict)){
+            $this->textChildrenDict[$path][] = $node;
+        }else{
+            $this->textChildrenDict[$path] = [$node];
+        }
     }
 
     private function addToAssetChildrenDict(NodeInterface $node):void
     {
         $path = $this->constructPath($node);
-        $this->assetChildrenDict[$path] = $node;
+        if (array_key_exists($path, $this->assetChildrenDict)){
+            $this->assetChildrenDict[$path][] = $node;
+        }else{
+            $this->assetChildrenDict[$path] = [$node];
+        }
     }
 
     private function addToGroupChildrenDict(NodeInterface $node):void
     {
         $path = $this->constructPath($node);
-        $this->groupChildrenDict[$path] = $node;
+        if (array_key_exists($path, $this->groupChildrenDict)){
+            $this->groupChildrenDict[$path][] = $node;
+        }else{
+            $this->groupChildrenDict[$path] = [$node];
+        }
     }
 
     /**
