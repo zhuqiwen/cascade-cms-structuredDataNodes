@@ -3,8 +3,9 @@
 namespace  Edu\IU\RSB\StructuredDataNodes\Asset;
 
 use Edu\IU\RSB\StructuredDataNodes\BaseNode;
+use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
 
-abstract class AssetNode extends BaseNode{
+abstract class AssetNode extends BaseNode implements NodeInterface{
 
     public function __construct(string $identifier, string $assetType)
     {

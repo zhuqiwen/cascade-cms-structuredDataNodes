@@ -2,7 +2,9 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Asset;
 
-class BlockNode extends AssetNode {
+use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+
+class BlockNode extends AssetNode implements NodeInterface {
 
     public function __construct(string $identifier, string | null $blockId = null, string | null $blockPath = null)
     {

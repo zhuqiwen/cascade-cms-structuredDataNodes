@@ -2,7 +2,9 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Asset;
 
-class SymlinkNode extends AssetNode {
+use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+
+class SymlinkNode extends AssetNode implements NodeInterface {
 
     public function __construct(string $identifier, string | null $assetId = null, string | null $assetPath = null)
     {

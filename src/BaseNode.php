@@ -2,7 +2,7 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes;
 
-class BaseNode{
+class BaseNode implements NodeInterface {
     /**
      * DO NOT add any public attributes
      * since the following attributes are returned as the keys in the node's associative array

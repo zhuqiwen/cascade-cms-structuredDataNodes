@@ -2,7 +2,9 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
- class CheckboxNode extends TextNode {
+ use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+
+ class CheckboxNode extends TextNode implements NodeInterface {
 
 
     public function __construct(string $identifier, array $options = [])

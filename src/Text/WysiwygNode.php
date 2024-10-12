@@ -2,7 +2,10 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
- class WysiwygNode extends TextNode {
+ use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+ use PhpParser\Node;
+
+ class WysiwygNode extends TextNode implements NodeInterface {
 
 
     public function __construct(string $identifier, string  | null $text = null)

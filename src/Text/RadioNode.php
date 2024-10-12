@@ -2,6 +2,8 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
- class RadioNode extends TextNode {
+ use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+
+ class RadioNode extends TextNode implements NodeInterface {
 
 }

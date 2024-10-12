@@ -2,7 +2,9 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
- class DataTimeNode extends TextNode {
+ use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+
+ class DataTimeNode extends TextNode implements NodeInterface {
 
 
     public function __construct(string $identifier, string | null $text = null)

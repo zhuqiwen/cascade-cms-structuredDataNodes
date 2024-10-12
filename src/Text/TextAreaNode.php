@@ -2,5 +2,7 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
- class TextAreaNode extends TextNode {
+ use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+
+ class TextAreaNode extends TextNode implements NodeInterface {
 }

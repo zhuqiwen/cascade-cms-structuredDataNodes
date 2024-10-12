@@ -2,6 +2,8 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
- class DropdownNode extends TextNode {
+ use Edu\IU\RSB\StructuredDataNodes\NodeInterface;
+
+ class DropdownNode extends TextNode implements NodeInterface {
 
 }
