@@ -93,7 +93,7 @@ class GroupNode extends BaseNode implements NodeInterface {
     }
 
 
-    public function getSingleChildNodeByPath(string $pathToNodeFromThisGroupNode): BaseNode | null
+    public function getSingleDescendantNodeByPath(string $pathToNodeFromThisGroupNode): BaseNode | null
     {
         $result = null;
         if (empty(trim($pathToNodeFromThisGroupNode))){
@@ -115,7 +115,7 @@ class GroupNode extends BaseNode implements NodeInterface {
 
             foreach ($this->groupChildrenDict as $childGroupNodeArray){
                 foreach ($childGroupNodeArray as $childGroupNode){
-                    $targetNode = $childGroupNode->getSingleChildNodeByPath($pathToUseInChildGroupNodes);
+                    $targetNode = $childGroupNode->getSingleDescendantNodeByPath($pathToUseInChildGroupNodes);
                     if (!is_null($targetNode)){
                         // only find the first that matches
                         return $targetNode;
@@ -127,7 +127,7 @@ class GroupNode extends BaseNode implements NodeInterface {
 
         return null;
     }
-    public function getAllChildrenNodesByPath(string $pathToNodeFromThisGroupNode):  array
+    public function getAllDescendantNodesByPath(string $pathToNodeFromThisGroupNode):  array
     {
         $result = [];
         if (empty(trim($pathToNodeFromThisGroupNode))){
@@ -150,7 +150,7 @@ class GroupNode extends BaseNode implements NodeInterface {
             $pathToUseInChildGroupNodes = $this->getPathToUseInChildGroupNode($pathToNodeFromThisGroupNode);
             foreach ($this->groupChildrenDict as $childGroupNodeArray){
                 foreach ($childGroupNodeArray as $childGroupNode){
-                    $targetNodesArray = $childGroupNode->getAllChildrenNodesByPath($pathToUseInChildGroupNodes);
+                    $targetNodesArray = $childGroupNode->getAllDescendantNodesByPath($pathToUseInChildGroupNodes);
                     $result = array_merge($result, $targetNodesArray);
                 }
 
