@@ -106,6 +106,8 @@ class GroupNode extends BaseNode implements NodeInterface {
             //then try assetChildrenDict
         }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->assetChildrenDict)){
             return $this->assetChildrenDict[$pathToNodeFromThisGroupNode][0];
+        }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->groupChildrenDict)){
+            return $this->groupChildrenDict[$pathToNodeFromThisGroupNode][0];
         }else{ //if not found, then try going through child Group nodes
             $pathToUseInChildGroupNodes = $this->getPathToUseInChildGroupNode($pathToNodeFromThisGroupNode);
 
@@ -122,6 +124,29 @@ class GroupNode extends BaseNode implements NodeInterface {
         }
 
         return null;
+    }
+    public function getAllTextOrAssetChildrenNodesByPath(string $pathToNodeFromThisGroupNode):  array
+    {
+        return [];
+    }
+
+//    public function getFirstChildNodeByPath(string $pathToNodeFromThisNode):BaseNode | null
+//    {
+//
+//    }
+
+    public function getAllChildrenNodesByPath(string $pathToNodeFromThisNode, array &$startPoint = [])
+    {
+
+    }
+    private function returnOnlyOneOrMultiple(array $nodeArray, bool $limitToOne): BaseNode | array
+    {
+        if ($limitToOne){
+            echo "one" . PHP_EOL;
+        }else{
+            echo "multiple" . PHP_EOL;
+        }
+        return $limitToOne ? $nodeArray[0] : $nodeArray;
     }
 
     private function getPathToUseInChildGroupNode(string $pathToNodeFromThisGroupNode): string
