@@ -95,6 +95,7 @@ class GroupNode extends BaseNode implements NodeInterface {
 
     public function getSingleChildNodeByPath(string $pathToNodeFromThisGroupNode): BaseNode | null
     {
+        $result = null;
         if (empty(trim($pathToNodeFromThisGroupNode))){
             return null;
         }
@@ -106,6 +107,7 @@ class GroupNode extends BaseNode implements NodeInterface {
             //then try assetChildrenDict
         }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->assetChildrenDict)){
             return $this->assetChildrenDict[$pathToNodeFromThisGroupNode][0];
+            // then try groupChildrenDict
         }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->groupChildrenDict)){
             return $this->groupChildrenDict[$pathToNodeFromThisGroupNode][0];
         }else{ //if not found, then try going through child Group nodes
@@ -125,28 +127,44 @@ class GroupNode extends BaseNode implements NodeInterface {
 
         return null;
     }
-    public function getAllTextOrAssetChildrenNodesByPath(string $pathToNodeFromThisGroupNode):  array
+    public function getAllChildrenNodesByPath(string $pathToNodeFromThisGroupNode):  array
     {
-        return [];
-    }
-
-//    public function getFirstChildNodeByPath(string $pathToNodeFromThisNode):BaseNode | null
-//    {
-//
-//    }
-
-    public function getAllChildrenNodesByPath(string $pathToNodeFromThisNode, array &$startPoint = [])
-    {
-
-    }
-    private function returnOnlyOneOrMultiple(array $nodeArray, bool $limitToOne): BaseNode | array
-    {
-        if ($limitToOne){
-            echo "one" . PHP_EOL;
-        }else{
-            echo "multiple" . PHP_EOL;
+        $result = [];
+        if (empty(trim($pathToNodeFromThisGroupNode))){
+            return $result;
         }
-        return $limitToOne ? $nodeArray[0] : $nodeArray;
+        //normalize path to be
+        $pathToNodeFromThisGroupNode = $this->normalizePath($pathToNodeFromThisGroupNode);
+
+        //try textChildrenDict first
+        if (array_key_exists($pathToNodeFromThisGroupNode, $this->textChildrenDict)){
+            return $this->textChildrenDict[$pathToNodeFromThisGroupNode];
+            //then try assetChildrenDict
+        }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->assetChildrenDict)){
+            return $this->assetChildrenDict[$pathToNodeFromThisGroupNode];
+            // then try groupChildrenDict
+        }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->groupChildrenDict)){
+            return $this->groupChildrenDict[$pathToNodeFromThisGroupNode];
+            //if not found, then try going through child Group nodes
+        }else{
+            $pathToUseInChildGroupNodes = $this->getPathToUseInChildGroupNode($pathToNodeFromThisGroupNode);
+            foreach ($this->groupChildrenDict as $childGroupNodeArray){
+                foreach ($childGroupNodeArray as $childGroupNode){
+                    $targetNodesArray = $childGroupNode->getAllChildrenNodesByPath($pathToUseInChildGroupNodes);
+                    $result = array_merge($result, $targetNodesArray);
+                }
+
+            }
+        }
+
+        return $result;
+    }
+
+
+
+    private function normalizePath(string $originalPath): string
+    {
+        return trim($originalPath, DIRECTORY_SEPARATOR);
     }
 
     private function getPathToUseInChildGroupNode(string $pathToNodeFromThisGroupNode): string
