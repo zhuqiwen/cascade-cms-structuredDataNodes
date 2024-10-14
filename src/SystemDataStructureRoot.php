@@ -4,6 +4,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes;
 
 
 use PHPUnit\Exception;
+use PHPUnit\TextUI\XmlConfiguration\Group;
 
 /**
  * a wrapper class for Converter
@@ -82,6 +83,30 @@ class SystemDataStructureRoot{
         }else{// if the path is just one single identifier
             return $childNodeToSearch;
         }
+    }
+
+    public function getAllDescendantNodesByPath(string $pathToNode): array
+    {
+        $result = [];
+        if (empty(trim($pathToNode, DIRECTORY_SEPARATOR))){
+            return $result;
+        }
+
+        $pathArray = explode(DIRECTORY_SEPARATOR, $pathToNode);
+        $childNodeIdentifier = $pathArray[0];
+        $childrenNodesToSearch = $this->getAllChildrenNodesByName($childNodeIdentifier);
+
+        if (sizeof($pathArray) > 1){
+            foreach ($childrenNodesToSearch as $childNode){
+                if ($childNode instanceof GroupNode){
+                    $result = array_merge($result, $childNode->getAllDescendantNodesByPath($pathToNode));
+                }
+            }
+        }else{
+            return $childrenNodesToSearch;
+        }
+
+        return $result;
     }
 
 
