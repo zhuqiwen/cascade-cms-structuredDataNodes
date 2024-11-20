@@ -64,6 +64,7 @@ class SystemDataStructureRoot{
 
     public function getSingleDescendantNodeByPath(string $pathToNode):NodeInterface | null
     {
+        $pathToNode = ltrim($pathToNode, DIRECTORY_SEPARATOR);
         // empty string or '/'
         if (empty(trim($pathToNode, DIRECTORY_SEPARATOR))){
             return null;
@@ -87,6 +88,7 @@ class SystemDataStructureRoot{
 
     public function getAllDescendantNodesByPath(string $pathToNode): array
     {
+        $pathToNode = ltrim($pathToNode, DIRECTORY_SEPARATOR);
         $result = [];
         if (empty(trim($pathToNode, DIRECTORY_SEPARATOR))){
             return $result;
