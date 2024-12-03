@@ -100,7 +100,9 @@ class GroupNode extends BaseNode implements NodeInterface {
             return null;
         }
         //normalize path to be
-        $pathToNodeFromThisGroupNode = trim($pathToNodeFromThisGroupNode, DIRECTORY_SEPARATOR);
+        $pathToNodeFromThisGroupNode = $this->normalizePath($pathToNodeFromThisGroupNode);
+        //because the key/path in dict to child looks like $this->identifier . DIRECTORY_SEPARATOR . $child->identifier
+        $pathToNodeFromThisGroupNode = $this->constructPath($pathToNodeFromThisGroupNode);
         //try textChildrenDict first
         if (array_key_exists($pathToNodeFromThisGroupNode, $this->textChildrenDict)){
             return $this->textChildrenDict[$pathToNodeFromThisGroupNode][0];
@@ -135,7 +137,8 @@ class GroupNode extends BaseNode implements NodeInterface {
         }
         //normalize path to be
         $pathToNodeFromThisGroupNode = $this->normalizePath($pathToNodeFromThisGroupNode);
-
+        //because the key/path in dict to child looks like $this->identifier . DIRECTORY_SEPARATOR . $child->identifier
+        $pathToNodeFromThisGroupNode = $this->constructPath($pathToNodeFromThisGroupNode);
         //try textChildrenDict first
         if (array_key_exists($pathToNodeFromThisGroupNode, $this->textChildrenDict)){
             return $this->textChildrenDict[$pathToNodeFromThisGroupNode];
@@ -188,7 +191,7 @@ class GroupNode extends BaseNode implements NodeInterface {
 
     private function addToTextChildrenDict(NodeInterface $node):void
     {
-        $path = $this->constructPath($node);
+        $path = $this->constructPath($node->identifier);
         //node identifier is not unique
         if (array_key_exists($path, $this->textChildrenDict)){
             $this->textChildrenDict[$path][] = $node;
@@ -199,7 +202,7 @@ class GroupNode extends BaseNode implements NodeInterface {
 
     private function addToAssetChildrenDict(NodeInterface $node):void
     {
-        $path = $this->constructPath($node);
+        $path = $this->constructPath($node->identifier);
         if (array_key_exists($path, $this->assetChildrenDict)){
             $this->assetChildrenDict[$path][] = $node;
         }else{
@@ -209,7 +212,7 @@ class GroupNode extends BaseNode implements NodeInterface {
 
     private function addToGroupChildrenDict(NodeInterface $node):void
     {
-        $path = $this->constructPath($node);
+        $path = $this->constructPath($node->identifier);
         if (array_key_exists($path, $this->groupChildrenDict)){
             $this->groupChildrenDict[$path][] = $node;
         }else{
@@ -222,9 +225,9 @@ class GroupNode extends BaseNode implements NodeInterface {
      * @param NodeInterface $node
      * @return string
      */
-    public function constructPath(NodeInterface $node):string
+    public function constructPath(string $nodeIdentifier):string
     {
-        return $this->identifier . DIRECTORY_SEPARATOR . $node->identifier;
+        return $this->identifier . DIRECTORY_SEPARATOR . $nodeIdentifier;
     }
 
 
