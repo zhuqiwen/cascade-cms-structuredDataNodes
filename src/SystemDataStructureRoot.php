@@ -38,12 +38,19 @@ class SystemDataStructureRoot{
 
     }
 
-    public function getSingleChildNodeByName(string $nodeIdentifier): NodeInterface | null
+    public function getSingleChildNodeByName(string $nodeIdentifier, int $position = 1): NodeInterface | null
     {
         $result = null;
+        // in case 0 is input, which we assume the user wants the 1st
+        $position = $position == 0 ? 1 : $position;
+        $cnt = 0;
         foreach ($this->rootArray as $node) {
             if ($node->identifier == trim($nodeIdentifier)){
-                $result = $node;
+                $cnt += 1;
+                if ($position == $cnt){
+                    $result = $node;
+                    break;
+                }
             }
         }
 
