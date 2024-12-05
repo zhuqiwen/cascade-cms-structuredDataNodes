@@ -164,6 +164,20 @@ class GroupNode extends BaseNode implements NodeInterface {
     }
 
 
+    public function getAllChildrenNodesArray():array
+    {
+        $result = $this->getNodeArray()['structuredDataNodes']['structuredDataNode'];
+        if (is_null($result)){
+            $result = [];
+        }
+        return $result;
+    }
+
+    public function getAllChildrenNodes():array
+    {
+        return $this->structuredDataNodes['structuredDataNode'];
+    }
+
 
     private function normalizePath(string $originalPath): string
     {
