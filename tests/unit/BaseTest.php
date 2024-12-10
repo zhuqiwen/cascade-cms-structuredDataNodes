@@ -12,6 +12,9 @@ abstract class BaseTest extends TestCase{
 
     protected static array $mockDataIET;
     protected static  array $mockDataIWF;
+
+    protected static array $ietOriginalData;
+    protected static array $iwfOriginalData;
     protected static Converter $converter;
 
     protected static SystemDataStructureRoot $systemDataStructureRoot;
@@ -22,5 +25,8 @@ abstract class BaseTest extends TestCase{
         self::$systemDataStructureRoot = new SystemDataStructureRoot();
         self::$mockDataIET = self::$converter->convert(json_decode(file_get_contents(self::$mockDataIETPath)));
         self::$mockDataIWF = self::$converter->convert(json_decode(file_get_contents(self::$mockDataIWFPath)));
+
+        self::$ietOriginalData = json_decode(file_get_contents(self::$mockDataIETPath), true);
+        self::$iwfOriginalData = json_decode(file_get_contents(self::$mockDataIWFPath), true);
     }
 }

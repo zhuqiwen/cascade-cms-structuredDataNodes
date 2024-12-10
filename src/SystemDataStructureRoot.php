@@ -103,13 +103,13 @@ class SystemDataStructureRoot{
         }
 
         $pathArray = explode(DIRECTORY_SEPARATOR, $pathToNode);
-        $childNodeIdentifier = $pathArray[0];
+        $childNodeIdentifier = array_shift($pathArray);
         $childrenNodesToSearch = $this->getAllChildrenNodesByName($childNodeIdentifier);
-
-        if (sizeof($pathArray) > 1){
+        $pathToUseInChildrenSearch = implode(DIRECTORY_SEPARATOR, $pathArray);
+        if (sizeof($pathArray) > 0){
             foreach ($childrenNodesToSearch as $childNode){
                 if ($childNode instanceof GroupNode){
-                    $result = array_merge($result, $childNode->getAllDescendantNodesByPath($pathToNode));
+                    $result = array_merge($result, $childNode->getAllDescendantNodesByPath($pathToUseInChildrenSearch));
                 }
             }
         }else{
