@@ -2,10 +2,6 @@
 
 namespace  Edu\IU\RSB\StructuredDataNodes;
 
-
-use PHPUnit\Exception;
-use PHPUnit\TextUI\XmlConfiguration\Group;
-
 /**
  * a wrapper class for Converter
  */
@@ -38,19 +34,17 @@ class SystemDataStructureRoot{
 
     }
 
-    public function getSingleChildNodeByName(string $nodeIdentifier, int $position = 1): NodeInterface | null
+    public function getSingleChildNodeByName(string $nodeIdentifier, int $position = 0): NodeInterface | null
     {
         $result = null;
-        // in case 0 is input, which we assume the user wants the 1st
-        $position = $position == 0 ? 1 : $position;
         $cnt = 0;
         foreach ($this->rootArray as $node) {
             if ($node->identifier == trim($nodeIdentifier)){
-                $cnt += 1;
                 if ($position == $cnt){
                     $result = $node;
                     break;
                 }
+                $cnt += 1;
             }
         }
 
@@ -69,7 +63,7 @@ class SystemDataStructureRoot{
         return $result;
     }
 
-    public function getSingleDescendantNodeByPath(string $pathToNode):NodeInterface | null
+    public function getFirstDescendantNodeByPath(string $pathToNode):NodeInterface | null
     {
         $pathToNode = ltrim($pathToNode, DIRECTORY_SEPARATOR);
         // empty string or '/'
@@ -91,6 +85,13 @@ class SystemDataStructureRoot{
         }else{// if the path is just one single identifier
             return $childNodeToSearch;
         }
+    }
+
+    public function getSingleDescendantNodeByPath(string $pathToNode, int $zeroBasedIndex = 0):NodeInterface | null
+    {
+        $allDescendantNodesArray = $this->getAllDescendantNodesByPath($pathToNode);
+
+        return $allDescendantNodesArray[$zeroBasedIndex] ?? null;
     }
 
     public function getAllDescendantNodesByPath(string $pathToNode): array
@@ -122,6 +123,14 @@ class SystemDataStructureRoot{
     public function getRootArray():array
     {
         return $this->rootArray;
+    }
+
+    public function setRootArray(array $convertedStructuredDataNodesArray):void
+    {
+        if (empty($convertedStructuredDataNodesArray)){
+            throw new \RuntimeException('the input $convertedStructuredDataNodesArray should not be empty');
+        }
+        $this->rootArray = $convertedStructuredDataNodesArray;
     }
 
     private function printInCLI(string $message):void

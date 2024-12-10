@@ -93,7 +93,7 @@ class GroupNode extends BaseNode implements NodeInterface {
     }
 
 
-    public function getSingleDescendantNodeByPath(string $pathToNodeFromThisGroupNode): BaseNode | null
+    public function getFirstDescendantNodeByPath(string $pathToNodeFromThisGroupNode): BaseNode | null
     {
         $result = null;
         if (empty(trim($pathToNodeFromThisGroupNode))){
@@ -102,32 +102,43 @@ class GroupNode extends BaseNode implements NodeInterface {
         //normalize path to be
         $pathToNodeFromThisGroupNode = $this->normalizePath($pathToNodeFromThisGroupNode);
         //because the key/path in dict to child looks like $this->identifier . DIRECTORY_SEPARATOR . $child->identifier
-        $pathToNodeFromThisGroupNode = $this->constructPath($pathToNodeFromThisGroupNode);
+        $pathToUseInCurrentDict = $this->constructPath($pathToNodeFromThisGroupNode);
         //try textChildrenDict first
-        if (array_key_exists($pathToNodeFromThisGroupNode, $this->textChildrenDict)){
-            return $this->textChildrenDict[$pathToNodeFromThisGroupNode][0];
+        if (array_key_exists($pathToUseInCurrentDict, $this->textChildrenDict)){
+            return $this->textChildrenDict[$pathToUseInCurrentDict][0];
             //then try assetChildrenDict
-        }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->assetChildrenDict)){
-            return $this->assetChildrenDict[$pathToNodeFromThisGroupNode][0];
+        }elseif (array_key_exists($pathToUseInCurrentDict, $this->assetChildrenDict)){
+            return $this->assetChildrenDict[$pathToUseInCurrentDict][0];
             // then try groupChildrenDict
-        }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->groupChildrenDict)){
-            return $this->groupChildrenDict[$pathToNodeFromThisGroupNode][0];
+        }elseif (array_key_exists($pathToUseInCurrentDict, $this->groupChildrenDict)){
+            return $this->groupChildrenDict[$pathToUseInCurrentDict][0];
         }else{ //if not found, then try going through child Group nodes
             $pathToUseInChildGroupNodes = $this->getPathToUseInChildGroupNode($pathToNodeFromThisGroupNode);
+            $dictKey = $this->getDictKey($pathToNodeFromThisGroupNode);
 
-            foreach ($this->groupChildrenDict as $childGroupNodeArray){
-                foreach ($childGroupNodeArray as $childGroupNode){
-                    $targetNode = $childGroupNode->getSingleDescendantNodeByPath($pathToUseInChildGroupNodes);
-                    if (!is_null($targetNode)){
-                        // only find the first that matches
-                        return $targetNode;
+            foreach ($this->groupChildrenDict as $key => $childGroupNodeArray){
+                if ($key == $dictKey){
+                    foreach ($childGroupNodeArray as $childGroupNode){
+                        $targetNode = $childGroupNode->getFirstDescendantNodeByPath($pathToUseInChildGroupNodes);
+                        if (!is_null($targetNode)){
+                            // only find the first that matches
+                            return $targetNode;
+                        }
                     }
+
                 }
 
             }
         }
 
         return null;
+    }
+
+    public function getSingleDescendantNodeByPath(string $pathToNodeFromThisGroupNode, int $zeroBasedIndex = 0): BaseNode | null
+    {
+        $allDescendantNodesArray = $this->getAllDescendantNodesByPath($pathToNodeFromThisGroupNode);
+
+        return $allDescendantNodesArray[$zeroBasedIndex] ?? null;
     }
     public function getAllDescendantNodesByPath(string $pathToNodeFromThisGroupNode):  array
     {
@@ -138,23 +149,27 @@ class GroupNode extends BaseNode implements NodeInterface {
         //normalize path to be
         $pathToNodeFromThisGroupNode = $this->normalizePath($pathToNodeFromThisGroupNode);
         //because the key/path in dict to child looks like $this->identifier . DIRECTORY_SEPARATOR . $child->identifier
-        $pathToNodeFromThisGroupNode = $this->constructPath($pathToNodeFromThisGroupNode);
+        $pathToUseInCurrentDict = $this->constructPath($pathToNodeFromThisGroupNode);
+
         //try textChildrenDict first
-        if (array_key_exists($pathToNodeFromThisGroupNode, $this->textChildrenDict)){
-            return $this->textChildrenDict[$pathToNodeFromThisGroupNode];
+        if (array_key_exists($pathToUseInCurrentDict, $this->textChildrenDict)){
+            return $this->textChildrenDict[$pathToUseInCurrentDict];
             //then try assetChildrenDict
-        }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->assetChildrenDict)){
-            return $this->assetChildrenDict[$pathToNodeFromThisGroupNode];
+        }elseif (array_key_exists($pathToUseInCurrentDict, $this->assetChildrenDict)){
+            return $this->assetChildrenDict[$pathToUseInCurrentDict];
             // then try groupChildrenDict
-        }elseif (array_key_exists($pathToNodeFromThisGroupNode, $this->groupChildrenDict)){
-            return $this->groupChildrenDict[$pathToNodeFromThisGroupNode];
+        }elseif (array_key_exists($pathToUseInCurrentDict, $this->groupChildrenDict)){
+            return $this->groupChildrenDict[$pathToUseInCurrentDict];
             //if not found, then try going through child Group nodes
         }else{
             $pathToUseInChildGroupNodes = $this->getPathToUseInChildGroupNode($pathToNodeFromThisGroupNode);
-            foreach ($this->groupChildrenDict as $childGroupNodeArray){
-                foreach ($childGroupNodeArray as $childGroupNode){
-                    $targetNodesArray = $childGroupNode->getAllDescendantNodesByPath($pathToUseInChildGroupNodes);
-                    $result = array_merge($result, $targetNodesArray);
+            $dictKey = $this->getDictKey($pathToNodeFromThisGroupNode);
+            foreach ($this->groupChildrenDict as $key => $childGroupNodeArray){
+                if ($key == $dictKey){
+                    foreach ($childGroupNodeArray as $childGroupNode){
+                        $targetNodesArray = $childGroupNode->getAllDescendantNodesByPath($pathToUseInChildGroupNodes);
+                        $result = array_merge($result, $targetNodesArray);
+                    }
                 }
 
             }
@@ -243,6 +258,15 @@ class GroupNode extends BaseNode implements NodeInterface {
     {
         return $this->identifier . DIRECTORY_SEPARATOR . $nodeIdentifier;
     }
+
+    public function getDictKey(string $path):string
+    {
+        $pathArray = explode(DIRECTORY_SEPARATOR, $path);
+        $first = array_shift($pathArray);
+
+        return $this->identifier . DIRECTORY_SEPARATOR . $first;
+    }
+
 
 
 }
