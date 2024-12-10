@@ -14,8 +14,16 @@
       "Edu\\IU\\RSB\\StructuredDataNodes\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Edu\\IU\\RSB\\StructuredDataNodes\\Tests\\": "tests"
+    }
+  },
   "require": {
     "iu-vpcm-dc/wcms-webservice": "dev-main",
     "iu-webtech/wcms-generic-tool": "dev-main"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "9.6.x-dev"
   }
 }
