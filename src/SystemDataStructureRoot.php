@@ -125,6 +125,28 @@ class SystemDataStructureRoot{
         return $this->rootArray;
     }
 
+    public function getStructuredDataNode():\stdClass | array
+    {
+        $sizeOfNodes = sizeof($this->rootArray);
+
+        if ($sizeOfNodes <= 0){
+            throw new \RuntimeException('No structured data nodes found');
+
+        }elseif ($sizeOfNodes == 1){
+            $result = (object)$this->rootArray[0]->getNodeArray();
+
+        }else{
+            $result = [];
+            foreach ($this->rootArray as $node){
+                $result[] = (object)$node->getNodeArray();
+            }
+            return $result;
+        }
+
+        return $result;
+
+    }
+
     public function setRootArray(array $convertedStructuredDataNodesArray):void
     {
         if (empty($convertedStructuredDataNodesArray)){
