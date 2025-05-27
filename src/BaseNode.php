@@ -25,6 +25,8 @@ class BaseNode implements NodeInterface {
     /**
      * If any extra attributes are needed, add only as private, protected, and/or static below here
      */
+    private string $pathNoPosition = 'NOT SET';
+    private string $pathWithPosition = 'NOT SET';
 
     /**
      * END of non-public attributes
@@ -37,6 +39,12 @@ class BaseNode implements NodeInterface {
         $this->type = $type;
         $this->identifier = $identifier;
     }
+
+    public function setPathNoPosition(string $parentPathNoPosition = ''):void
+    {
+        $this->pathNoPosition = $parentPathNoPosition . DIRECTORY_SEPARATOR . $this->identifier;
+    }
+
 
     /**
      * the returned array will be used to construct data for creating/updating pages and blocks in Cascade CMS
@@ -62,6 +70,16 @@ class BaseNode implements NodeInterface {
             throw new \RuntimeException("$key is not a valid attribute.");
         }
         $this->{$key} = $value;
+    }
+
+    public function getPathWithPosition():string
+    {
+        return $this->pathWithPosition;
+    }
+
+    public function getPathNoPosition():string
+    {
+        return $this->pathNoPosition;
     }
 
     //TODO: add shortcut methods for setValue()
