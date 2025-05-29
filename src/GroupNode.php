@@ -11,7 +11,7 @@ class GroupNode extends BaseNode implements NodeInterface {
 
 
 
-    public function __construct(string $identifier, BaseNode $node = null)
+    public function __construct(string $identifier, BaseNode | null $node = null)
     {
         parent::__construct('group', $identifier);
         $this->setValue('structuredDataNodes', ['structuredDataNode' => null]) ;
