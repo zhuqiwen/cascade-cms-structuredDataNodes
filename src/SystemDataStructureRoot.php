@@ -14,20 +14,20 @@ class SystemDataStructureRoot{
 
     private array $rootArray = [];
 
-    public function __construct(array $structuredDataNodesArray = [])
+    public function __construct(array $structuredDataNodesArray = [], bool $withPathInfo = false)
     {
         $this->baseNodeExample = new BaseNode('text', 'baseNodeExample');
         $this->converter = new Converter();
         if (!empty($structuredDataNodesArray)){
-            $this->convert($structuredDataNodesArray);
+            $this->convert($structuredDataNodesArray, $withPathInfo);
         }
     }
 
-    public function convert(array $structuredDataNodesArray):void
+    public function convert(array $structuredDataNodesArray, bool $withPathInfo):void
     {
         try {
             $this->checkIfValidStructuredDataNodesArray($structuredDataNodesArray);
-            $this->rootArray = $this->converter->convert($structuredDataNodesArray);
+            $this->rootArray = $withPathInfo ? $this->converter->convertWithPathInfo($structuredDataNodesArray) : $this->converter->convert($structuredDataNodesArray);
         }catch (\Exception $e){
             $this->printInCLI($e->getMessage());
         }

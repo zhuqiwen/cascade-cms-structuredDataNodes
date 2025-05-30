@@ -25,8 +25,8 @@ class BaseNode implements NodeInterface {
     /**
      * If any extra attributes are needed, add only as private, protected, and/or static below here
      */
-    private string $pathNoPosition = 'NOT SET';
-    private string $pathWithPosition = 'NOT SET';
+    private string $pathNoPosition = 'path without position NOT SET';
+    private string $pathWithPosition = 'path with position NOT SET';
 
     /**
      * END of non-public attributes
@@ -43,6 +43,14 @@ class BaseNode implements NodeInterface {
     public function setPathNoPosition(string $parentPathNoPosition = ''):void
     {
         $this->pathNoPosition = $parentPathNoPosition . DIRECTORY_SEPARATOR . $this->identifier;
+    }
+
+    public function setPathWithPosition(string $parentPath, int $currentNodePosition):void
+    {
+        $this->pathWithPosition = $parentPath . DIRECTORY_SEPARATOR . $this->identifier . '[' . $currentNodePosition . ']';
+        //remove position info and construct path without position
+        $parentPathWithoutPosition = preg_replace('/\[[0-9]\]?/', '', $parentPath);
+        $this->setPathNoPosition($parentPathWithoutPosition);
     }
 
 
@@ -74,12 +82,12 @@ class BaseNode implements NodeInterface {
 
     public function getPathWithPosition():string
     {
-        return $this->pathWithPosition;
+        return trim($this->pathWithPosition, DIRECTORY_SEPARATOR);
     }
 
     public function getPathNoPosition():string
     {
-        return $this->pathNoPosition;
+        return trim($this->pathNoPosition, DIRECTORY_SEPARATOR);
     }
 
     //TODO: add shortcut methods for setValue()

@@ -15,6 +15,7 @@ use Edu\IU\RSB\StructuredDataNodes\Asset\SymlinkNode;
  */
 class Converter{
 
+    public array $valueNodes = [];
     use NodeTraits;
 
     public function convert(array $originalNodesArray): array
@@ -34,7 +35,6 @@ class Converter{
             'group' => $this->processGroupNode($node),
             'text' => $this->processTextNode($node),
         };
-
     }
 
     public function processAssetNode(\stdClass $assetNode): AssetNode
@@ -73,6 +73,105 @@ class Converter{
     {
         $dataNode = new BaseNode('text', $textNode->identifier);
         $dataNode->setValue('text', $textNode->text);
+
+        return $dataNode;
+    }
+
+
+
+    /**
+     * converter that also constructs path info
+     */
+    public function convertWithPathInfo(array $originalNodesArray): array
+    {
+        $result = [];
+        $counter = [];
+        foreach ($originalNodesArray as $node){
+            if (key_exists($node->identifier, $counter)){
+                $counter[$node->identifier] = $counter[$node->identifier] + 1;
+            }else{
+                $counter[$node->identifier] = 0;
+            }
+            $result[] = $this->convertNodeWithPathInfo($node, '', $counter[$node->identifier]);
+        }
+
+        return $result;
+    }
+
+    public function collectValueNodes(BaseNode $convertedNode): void
+    {
+        if ($convertedNode->type === 'asset' || $convertedNode->type === 'text'){
+            $this->valueNodes[] = $convertedNode;
+        }
+    }
+
+
+    public function convertNodeWithPathInfo(\stdClass $node, string $parentPath, int $nodePosition): BaseNode
+    {
+        $convertedNode =  match ($node->type){
+            'asset' => $this->processAssetNodeWithPathInfo($node, $parentPath, $nodePosition),
+            'group' => $this->processGroupNodeWithPathInfo($node, $parentPath, $nodePosition),
+            'text' => $this->processTextNodeWithPathInfo($node, $parentPath, $nodePosition),
+        };
+
+        $this->collectValueNodes($convertedNode);
+        echo $convertedNode->getPathWithPosition() . PHP_EOL;
+        echo "\t" . $convertedNode->getPathNoPosition() . PHP_EOL;
+
+        return $convertedNode;
+
+    }
+    public function processAssetNodeWithPathInfo(\stdClass $assetNode, string $parentPath, int $nodePosition): AssetNode
+    {
+        $assetInfo = $this->getAssetInfo($assetNode);
+        //get assetid, asset path and asset type
+        extract($assetInfo);
+
+        $node = match ($assetNode->assetType){
+            'page,file,symlink' => new LinkableNode($assetNode->identifier, $assetId, $assetPath, $type),
+            'file' => new FileNode($assetNode->identifier, $assetId, $assetPath),
+            'block' => new BlockNode($assetNode->identifier, $assetId, $assetPath),
+            'page' => new PageNode($assetNode->identifier, $assetId, $assetPath),
+            'symlink' => new SymlinkNode($assetNode->identifier, $assetId, $assetPath)
+        };
+
+        $node->setPathWithPosition($parentPath, $nodePosition);
+        return $node;
+    }
+    public function processGroupNodeWithPathInfo(\stdClass $groupNode, string $parentPath,  int $nodePosition): GroupNode
+    {
+        $dataNode = new GroupNode($groupNode->identifier);
+
+        $structuredDataNode = $groupNode->structuredDataNodes->structuredDataNode;
+        $structuredDataNodeArray = $structuredDataNode;
+        // in original structuredDataNode, if there is only one child, then it's a stdclass instead of array
+        if (!is_array($structuredDataNode)){
+            $structuredDataNodeArray = [$structuredDataNode];
+        }
+
+        $dataNode->setPathWithPosition($parentPath, $nodePosition);
+
+
+        $counter = [];
+        foreach ($structuredDataNodeArray as $index => $childNode) {
+            if (key_exists($childNode->identifier, $counter)){
+                $counter[$childNode->identifier] = $counter[$childNode->identifier] + 1;
+            }else{
+                $counter[$childNode->identifier] = 0;
+            }
+            $dataNode->addChild($this->convertNodeWithPathInfo($childNode, $dataNode->getPathWithPosition(), $counter[$childNode->identifier]));
+        }
+
+
+
+        return $dataNode;
+    }
+    public function processTextNodeWithPathInfo(\stdClass $textNode, string $parentPath, int $nodePosition): BaseNode
+    {
+        $dataNode = new BaseNode('text', $textNode->identifier);
+        $dataNode->setValue('text', $textNode->text);
+        $dataNode->setPathWithPosition($parentPath, $nodePosition);
+
 
         return $dataNode;
     }
