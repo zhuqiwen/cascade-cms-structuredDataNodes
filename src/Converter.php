@@ -115,8 +115,6 @@ class Converter{
         };
 
         $this->collectValueNodes($convertedNode);
-        echo $convertedNode->getPathWithPosition() . PHP_EOL;
-        echo "\t" . $convertedNode->getPathNoPosition() . PHP_EOL;
 
         return $convertedNode;
 
