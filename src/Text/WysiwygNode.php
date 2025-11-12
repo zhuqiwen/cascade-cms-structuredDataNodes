@@ -12,7 +12,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
     {
         $text = trim($text);
         if (!$this->areAllTagsClosed($text)){
-            throw new \RuntimeException('open tags and close tags in $text do not match');
+            throw new \RuntimeException("open tags and close tags in [$text] do not match");
         }
         parent::__construct($identifier, $text);
     }
