@@ -31,25 +31,21 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
      public function areAllTagsClosed(string $text):bool
      {
-         $openTagPattern = '#<([a-z]+)(?: .*)?(?<![/|/ ])>#iU';
-         $closeTagPattern = '#</([a-z]+)>#iU';
-         preg_match_all($openTagPattern, $text, $openMatches);
-         preg_match_all($closeTagPattern, $text, $closeMatches);
+         libxml_use_internal_errors(true);
 
-         // no tags
-         if (empty($openMatches) && empty($closeMatches)){
-             return true;
-         }else{
-             // open tags exists but no close tags
-             // or close tags exists but no open tags
-             if (sizeof($openMatches) != sizeof($closeMatches)){
-                 return false;
-             }else{
-                 // there are open tags and close tags,
-                 // then compare the number of them
-                return sizeof($openMatches[1]) == sizeof($closeMatches[1]);
-             }
-         }
+         $doc = new \DOMDocument('1.0', 'UTF-8');
+
+         // Wrap the HTML in a dummy element to handle fragments
+         $ok = $doc->loadHTML(
+             '<?xml encoding="utf-8" ?><div>' . $text . '</div>',
+             LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+         );
+
+         $errors = libxml_get_errors();
+         libxml_clear_errors();
+
+         // If parsing failed or libxml found errors, tags aren't all closed
+         return $ok && count($errors) === 0;
      }
 
      public function closeAllTags(string $text): string
