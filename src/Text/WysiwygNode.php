@@ -62,7 +62,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
          // Extract just the fragment inside our wrapper
          $output = '';
          foreach ($doc->documentElement->childNodes as $node) {
-             $output .= $doc->saveHTML($node);
+             $output .= $doc->saveXML($node);
          }
 
          libxml_clear_errors();
