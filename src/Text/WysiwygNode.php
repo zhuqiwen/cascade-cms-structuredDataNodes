@@ -42,7 +42,7 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
          $errors = tidy_get_error_buffer($tidy);
 
 
-         return !$errors === false;
+         return !$errors === true;
      }
 
      public function fixInput(string $text): string | \tidy
