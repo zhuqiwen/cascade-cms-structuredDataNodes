@@ -11,9 +11,9 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
     public function __construct(string $identifier, string $text = '', bool $autoFixHtml = true)
     {
         $text = trim($text);
-        $text = $autoFixHtml ? $this->closeAllTags($text) : $text;
+        $text = $autoFixHtml ? $this->fixInput($text) : $text;
 
-        if (!$this->areAllTagsClosed($text)){
+        if (!$this->isValid($text)){
             throw new \RuntimeException("open tags and close tags in [$text] do not match");
         }
         parent::__construct($identifier, $text);
