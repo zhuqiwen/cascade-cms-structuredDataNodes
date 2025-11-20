@@ -50,6 +50,8 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
 
      public function closeAllTags(string $text): string
      {
+         //rm all tags that star with '<system'
+         $text = preg_replace('/<\/?system[^>]*>/i', '', $text);
          libxml_use_internal_errors(true);
          $doc = new \DOMDocument('1.0', 'UTF-8');
 
