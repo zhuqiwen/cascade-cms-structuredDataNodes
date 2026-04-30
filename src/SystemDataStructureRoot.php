@@ -155,6 +155,12 @@ class SystemDataStructureRoot{
         $this->rootArray = $convertedStructuredDataNodesArray;
     }
 
+    public function setTextValueForSingleDescendantNodeByPath(string $pathToNode, string $value, int $zeroBasedIndex = 0):void
+    {
+        $node = $this->getSingleDescendantNodeByPath($pathToNode, $zeroBasedIndex);
+        $node->text = $value;
+    }
+
     private function printInCLI(string $message):void
     {
         if (PHP_SAPI === 'cli') {
