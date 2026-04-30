@@ -158,7 +158,11 @@ class SystemDataStructureRoot{
     public function setTextValueForSingleDescendantNodeByPath(string $pathToNode, string $value, int $zeroBasedIndex = 0):void
     {
         $node = $this->getSingleDescendantNodeByPath($pathToNode, $zeroBasedIndex);
-        $node->text = $value;
+        if ($node instanceof BaseNode){
+            $node->text = $value;
+        }else{
+            throw new \RuntimeException('The text node "'.$pathToNode.'" does not exist');
+        }
     }
 
     private function printInCLI(string $message):void
