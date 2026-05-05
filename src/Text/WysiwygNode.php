@@ -8,12 +8,12 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
  class WysiwygNode extends TextNode implements NodeInterface {
 
 
-    public function __construct(string $identifier, string $text = '', bool $autoFixHtml = true)
+    public function __construct(string $identifier, string $text = '', bool $autoFixHtml = true, bool $skipValidateText = true)
     {
         $text = trim($text);
         $text = $autoFixHtml ? $this->fixInput($text) : $text;
 
-        if (!$this->isValid($text)){
+        if (!$skipValidateText && !$this->isValid($text)){
             throw new \RuntimeException("open tags and close tags in [$text] do not match");
         }
         parent::__construct($identifier, $text);
