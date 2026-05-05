@@ -54,6 +54,8 @@ namespace  Edu\IU\RSB\StructuredDataNodes\Text;
              'wrap' => false,
          ];
          $tidy = new \tidy();
+         //make sure text has a root element
+         $text = '<div>' . $text . '</div>';
          $tidy->parseString($text, $config, 'utf8');
          $tidy->cleanRepair();
 
